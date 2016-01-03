@@ -27,7 +27,13 @@ class Game < ActiveRecord::Base
   def self.fastest_times(image_id)
 
     results = self.valid_scores(image_id).sort_by(&:time).take(10)
-    results.map { |game| "#{game.player.name}: #{game.time}" }
+    results.map do |game| {
+      :game_id => game.id,
+      :player_id => game.player.id,
+      :name => game.player.name,
+      :time => game.time
+    }
+    end
 
   end
   

@@ -6,5 +6,7 @@ Rails.application.routes.draw do
     resources :tags, :only => [:create, :index, :destroy]
     resources :characters, :only => [:index]
   end
+
+  resources :players, :only => [:update]
   
 end

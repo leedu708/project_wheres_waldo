@@ -2,16 +2,16 @@ var WALDO = WALDO || {};
 
 WALDO.Show = ( function() {
 
-  var _game_id;
+  var game_id;
 
   function init() {
-    _game_id = $('section').data('game-id');
+    game_id = $('section').data('game-id');
     _getImageData();
   };
 
   function _getImageData() {
     $.ajax( {
-      url: "http://localhost:3000/games/" + _game_id + ".json",
+      url: game_id + ".json",
       method: 'get',
 
       success: _initVariables
@@ -27,11 +27,13 @@ WALDO.Show = ( function() {
 
     WALDO.Tagger.init();
     WALDO.Tags.renderAllTags();
+
+    WALDO.Timer.startTimer();
   };
 
   function saveTag(tagger) {
     $.ajax( {
-      url: 'http://localhost:3000/games/' + _game_id + '/tags.json',
+      url: game_id + '/tags.json',
       method: 'post',
       data: JSON.stringify(tagger),
       dataType: 'json',
@@ -44,7 +46,7 @@ WALDO.Show = ( function() {
 
   function deleteTag(id) {
     $.ajax ( {
-      url: "http://localhost:3000/games/" + _game_id + "/tags/" + id + ".json",
+      url: game_id + "/tags/" + id + ".json",
       method: 'delete',
 
       success: WALDO.Tagger.deleteTag,
@@ -53,10 +55,10 @@ WALDO.Show = ( function() {
   };
 
   function gameOver() {
-    var game = { id: _game_id };
+    var game = { id: game_id };
 
     $.ajax( {
-      url: "http://localhost:3000/games/" + _game_id + ".json",
+      url: game_id + ".json",
       method: 'patch',
       data: JSON.stringify(game),
       dataType: 'json',
@@ -70,30 +72,16 @@ WALDO.Show = ( function() {
   function _showResults(game) {
     WALDO.Timer.stopTimer();
     WALDO.Tagger.disable();
-    console.log(game);
-    _getHighScores(game.image_id);
+    WALDO.Scores.getHighScores(game.image_id);
   };
 
-  function _getHighScores(this_image_id) {
-    var param = { image_id: this_image_id }
-
-    $.ajax( {
-      url: "http://localhost:3000/games.json",
-      method: 'get',
-      data: param,
-      dataType: 'json',
-      contentType: 'application/json',
-
-      success: _renderHighScores
-    });
-  };
-
-  function _renderHighScores(scores) {
-    console.log(scores);
+  function getGameID() {
+    return game_id;
   };
 
   return {
     init: init,
+    getGameID: getGameID,
     saveTag: saveTag,
     deleteTag: deleteTag,
     gameOver: gameOver

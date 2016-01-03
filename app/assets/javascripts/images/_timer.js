@@ -17,7 +17,7 @@ WALDO.Timer = ( function() {
   function _tick() {
     var currentTick = Date.now();
     var dif = currentTick - _lastTick;
-    _timer += (dT / 1000);
+    _timer += (dif / 1000);
     _lastTick = currentTick;
     _renderTimer();
   };

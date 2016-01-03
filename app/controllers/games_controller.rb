@@ -19,7 +19,7 @@ class GamesController < ApplicationController
   def create
 
     @game = Game.new
-    @game.create_player
+    @game.create_player(:name => 'Player')
     @game.start_time = Time.now
     @game.image = Image.first
 
